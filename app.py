@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, url_for, request
+from flask import Flask, render_template, flash, redirect, url_for, request,session
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
@@ -52,7 +52,9 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
+    
     submit = SubmitField('Sign In')
+    
 
 
 class RegistrationForm(FlaskForm):
@@ -100,6 +102,7 @@ class UserDetailForm(FlaskForm):
     email = StringField('Email: ', validators=[DataRequired(), Email()])
     access = IntegerField('Access: ')
 
+
 class AccountDetailForm(FlaskForm):
     id = IntegerField('Id: ')
     name = StringField('Name: ', validators=[DataRequired()])
@@ -113,7 +116,19 @@ ACCESS = {
     'user': 1,
     'admin': 2
 }
-
+class book( db.Model):
+    __tablename__ = "book_tbl"
+    student_id=db.Column(db.Integer, primary_key=True)
+    student_name= db.Column(db.String(40))
+    runoob_author= db.Column(db.String(40))
+    borrow_date=db.Column(db.Date)
+    submission_date=db.Column(db.Date)
+    book_name=db.Column(db.String(40))
+    book_id=db.Column(db.Integer)
+    info=db.Column(db.String(100))
+    book_place=db.Column(db.String(100))
+    def __repr__(self):
+        return '<User {0}>'.format(self.student_id)
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -176,14 +191,39 @@ def requires_access_level(access_level):
 
 
 
+books = [
+        {
+            'name' :u'红楼梦',
+            'author':u'曹雪芹',
+            'price':200
+        },
+        {
+            'name': u'水浒传',
+            'author': u'施耐庵',
+            'price': 100
+        },
+        {
+            'name': u'三国演义',
+            'author': u'罗贯中',
+            'price': 120
+        },
+        {
+            'name': u'西游记',
+            'author': u'吴承恩',
+            'price': 230
+        }
 
+
+]
 #### Routes ####
 
 # index
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', pageTitle='Flask App Home Page')
+    bo=book.query.filter().all()
+    #print(bo)
+    return render_template('index.html', pageTitle='Flask App Home Page', books=bo)
 
 # about
 @app.route('/about')
@@ -214,6 +254,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        session['user_name'] = form.username.data
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password', 'danger')
             return redirect(url_for('login'))
