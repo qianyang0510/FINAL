@@ -12,15 +12,16 @@ import pymysql
 
 #import secrets
 
+
 conn="mysql+pymysql://root:Ztc1639643261!@122.51.134.15:3306/shop"
 #conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser, secrets.dbpass, secrets.dbhost, secrets.dbname)
-
+session[]
 # Open database connection
 #dbhost = secrets.dbhost
 #dbuser = secrets.dbuser
 #dbpass = secrets.dbpass
 #dbname = secrets.dbname
-
+session['user_name'] = 'guest'
 #db = pymysql.connect(dbhost, dbuser, dbpass, dbname)
 
 app = Flask(__name__)
@@ -55,7 +56,13 @@ class LoginForm(FlaskForm):
     
     submit = SubmitField('Sign In')
     
-
+class addForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
 
 class RegistrationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -188,7 +195,7 @@ def requires_access_level(access_level):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
-    
+
 
 #### Routes ####
 
@@ -198,12 +205,13 @@ def requires_access_level(access_level):
 def index():
     bo=book.query.filter().all()
     #print(bo)
-    return render_template('index.html', pageTitle='Flask App Home Page', books=bo)
+    return render_template('index.html', pageTitle='Flask App Home Page', books=bo, user_name=user_name)
+
 @app.route('/masterview')
 def masterview():
     bo=book.query.filter().all()
     #print(bo)
-    return render_template('masterview.html', pageTitle='Flask App Home Page', books=bo)
+    return render_template('masterview.html', pageTitle='Flask App Home Page', books=bo, user_name=user_name)
 # about
 @app.route('/about')
 def about():
@@ -222,6 +230,35 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!', 'success')
         return redirect(url_for('login'))
+    return render_template('register.html',  pageTitle='Register | My Flask App', form=form)
+
+@app.route('/add', methods=['GET', 'POST'])
+def register():
+    user_name = session.get("user_name")
+	add_form = addForm()
+    if form.validate_on_submit():
+        #数据库逻辑
+        #user = User(name=form.name.data, username=form.username.data, email=form.email.data)
+        #user.set_password(form.password.data)
+        #db.session.add(user)
+       # db.session.commit()
+        #flash('Congratulations, you are now a registered user!', 'success')
+        return redirect(url_for('index'))
+    return render_template('register.html',  pageTitle='Register | My Flask App', form=form)
+
+@app.route('/udate', methods=['GET', 'POST'])
+def register():
+    user_name = session.get("user_name")
+	add_form = updateForm()
+    
+    if form.validate_on_submit():
+        #数据库逻辑
+        #user = User(name=form.name.data, username=form.username.data, email=form.email.data)
+        #user.set_password(form.password.data)
+        #db.session.add(user)
+       # db.session.commit()
+        #flash('Congratulations, you are now a registered user!', 'success')
+        return redirect(url_for('index'))
     return render_template('register.html',  pageTitle='Register | My Flask App', form=form)
 
 # user login
