@@ -1,0 +1,50 @@
+
+
+{% extends 'base.html' %}
+{% if user_name == "admin" %}
+
+
+{% else %}
+{{ user_name }}
+{% endif %}
+{% endblock title %}
+{% block body %}
+
+<div class="jumbotron text-center">
+    <h1>Welcome To Flask App</h1>
+<table>
+    <thead>
+    <th>studentid</th>
+    <th>student name</th>
+    <th>runoob_author</th>
+    <th>borrow_date</th>
+    <th>submission_date</th>
+    <th>book_name</th>
+    <th>book_id</th>
+    <th>info</th>
+    <th>book_place</th>
+  </thead>
+    <tbody>
+      <meta charset="UTF-8">
+      {% for book in books %}
+        <tr>
+            <td>{{ book.student_id}}</td>
+            <td>{{ book.student_name}}</td>
+            <td>{{ book.runoob_author}}</td>
+            <td>{{ book.borrow_date}}</td>
+            <td>{{book.submission_date}}</td>
+            <td>{{book.book_name}}</td>
+            <td>{{book.book_id}}</td>
+            <td>{{book.info}}</td>
+            <td>{{book.book_place}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% if session.logged_in == NULL %}
+<a href="/register" class="btn btn-primary btn-lg">Register</a>
+<a href="/login" class="btn btn-success btn-lg">Login</a>
+{% endif %}
+</div>
+
+{% endblock %}

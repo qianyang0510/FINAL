@@ -191,30 +191,6 @@ def requires_access_level(access_level):
 
 
 
-books = [
-        {
-            'name' :u'红楼梦',
-            'author':u'曹雪芹',
-            'price':200
-        },
-        {
-            'name': u'水浒传',
-            'author': u'施耐庵',
-            'price': 100
-        },
-        {
-            'name': u'三国演义',
-            'author': u'罗贯中',
-            'price': 120
-        },
-        {
-            'name': u'西游记',
-            'author': u'吴承恩',
-            'price': 230
-        }
-
-
-]
 #### Routes ####
 
 # index
@@ -224,7 +200,11 @@ def index():
     bo=book.query.filter().all()
     #print(bo)
     return render_template('index.html', pageTitle='Flask App Home Page', books=bo)
-
+@app.route('/masterview')
+def masterview():
+    bo=book.query.filter().all()
+    #print(bo)
+    return render_template('index.html', pageTitle='Flask App Home Page', books=bo)
 # about
 @app.route('/about')
 def about():
@@ -254,7 +234,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        session['user_name'] = form.username.data
+        session['user_name'] = 'admin'
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password', 'danger')
             return redirect(url_for('login'))
