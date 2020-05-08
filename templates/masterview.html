@@ -1,14 +1,14 @@
 
 
 {% extends 'base.html' %}
+
+{% block body %}
 {% if user_name == "admin" %}
 
 
 {% else %}
 {{ user_name }}
 {% endif %}
-{% endblock title %}
-{% block body %}
 
 <div class="jumbotron text-center">
     <h1>Welcome To Flask App</h1>

@@ -188,8 +188,7 @@ def requires_access_level(access_level):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
-
-
+    
 
 #### Routes ####
 
@@ -204,7 +203,7 @@ def index():
 def masterview():
     bo=book.query.filter().all()
     #print(bo)
-    return render_template('index.html', pageTitle='Flask App Home Page', books=bo)
+    return render_template('masterview.html', pageTitle='Flask App Home Page', books=bo)
 # about
 @app.route('/about')
 def about():
