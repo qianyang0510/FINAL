@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, redirect, url_for, request,session
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField,DateField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from flask_sqlalchemy import SQLAlchemy as _BaseSQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,7 +9,7 @@ from flask_login import LoginManager, UserMixin, current_user, login_user, logou
 from functools import wraps
 
 import pymysql
-
+import datetime
 #import secrets
 
 
@@ -57,11 +57,15 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
     
 class addForm(FlaskForm):
-    id = IntegerField('studuentid', validators=[DataRequired()])
-    name = StringField('studentname', validators=[DataRequired()])
+    student_id = IntegerField('studuentid', validators=[DataRequired()])
+    student_name = StringField('studentname', validators=[DataRequired()])
     runoob_author = StringField('author', validators=[DataRequired()])
-    bookname = StringField('bookname', validators=[DataRequired()])
-    place = StringField('place', validators=[DataRequired()])
+    borrow_date = DateField('date1', default=datetime.date.today())
+    submission_date=DateField('date2', default=datetime.date.today())
+    book_name=StringField('bookname', validators=[DataRequired()])
+    book_id=StringField('bookid', validators=[DataRequired()])
+    info=StringField('info', validators=[DataRequired()])
+    book_place = StringField('place', validators=[DataRequired()])
     submit = SubmitField('add')
 
 class RegistrationForm(FlaskForm):
@@ -136,8 +140,9 @@ class book( db.Model):
     book_place=db.Column(db.String(100))
     def __repr__(self):
         return '<User {0}>'.format(self.student_id)
+
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'colbert_users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
@@ -205,12 +210,14 @@ def requires_access_level(access_level):
 def index():
     bo=book.query.filter().all()
     #print(bo)
+    user_name=session.get('user_name')
     return render_template('index.html', pageTitle='Flask App Home Page', books=bo, user_name=user_name)
 
 @app.route('/masterview')
 def masterview():
     bo=book.query.filter().all()
     #print(bo)
+    user_name=session.get('user_name')
     return render_template('masterview.html', pageTitle='Flask App Home Page', books=bo, user_name=user_name)
 # about
 @app.route('/about')
@@ -235,16 +242,19 @@ def register():
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     user_name = session.get("user_name")
-    add_from =addForm() 
-    if form.validate_on_submit():
+    add_form = addForm() 
+    if  add_form.validate_on_submit():
         #数据库逻辑
+        addbook=book(student_id=add_form.student_id.data,student_name=add_form.student_name.data,runoob_author=add_form.runoob_author.data,borrow_date=NOW(),submission_date=NOW(),book_name=add_form.book_name.data,book_id=add_form.book_id.data,info=add_form.info.data,book_place=add_form.book_place.data)
+        db.session.add(addbook)
+
         #user = User(name=form.name.data, username=form.username.data, email=form.email.data)
         #user.set_password(form.password.data)
         #db.session.add(user)
-       # db.session.commit()
+        db.session.commit()
         #flash('Congratulations, you are now a registered user!', 'success')
         return redirect(url_for('index'))
-    return render_template('register.html',  pageTitle='Register | My Flask App', form=form)
+    return render_template('add.html',  pageTitle='Register | My Flask App', form=add_form)
 
 @app.route('/update', methods=['GET', 'POST'])
 def update():
@@ -270,6 +280,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         session['user_name'] = 'admin'
+        print(session.get('user_name'))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password', 'danger')
             return redirect(url_for('login'))
@@ -286,6 +297,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
+    session['user_name']='guest'
     flash('You have successfully logged out.', 'success')
     return redirect(url_for('index'))
 

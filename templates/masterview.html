@@ -3,12 +3,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-{% if user_name == "admin" %}
 
-
-{% else %}
-{{ user_name }}
-{% endif %}
 
 <div class="jumbotron text-center">
     <h1>Welcome To Flask App</h1>
@@ -41,7 +36,13 @@
       {% endfor %}
     </tbody>
 </table>
-{% if session.logged_in == NULL %}
+{% if user_name == "admin" %}
+<a href="{{ url_for('add') }}" class="btn btn-primary btn-lg">add</a>
+<a href="{{ url_for('update') }}" class="btn btn-success btn-lg">update</a>
+
+
+{% else %}
+{{ user_name }}
 <a href="/register" class="btn btn-primary btn-lg">Register</a>
 <a href="/login" class="btn btn-success btn-lg">Login</a>
 {% endif %}
