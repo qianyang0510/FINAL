@@ -15,13 +15,13 @@ import pymysql
 
 conn="mysql+pymysql://root:Ztc1639643261!@122.51.134.15:3306/shop"
 #conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser, secrets.dbpass, secrets.dbhost, secrets.dbname)
-session[]
+
 # Open database connection
 #dbhost = secrets.dbhost
 #dbuser = secrets.dbuser
 #dbpass = secrets.dbpass
 #dbname = secrets.dbname
-session['user_name'] = 'guest'
+#session['user_name'] = 'guest'
 #db = pymysql.connect(dbhost, dbuser, dbpass, dbname)
 
 app = Flask(__name__)
@@ -57,12 +57,12 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
     
 class addForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    id = IntegerField('studuentid', validators=[DataRequired()])
+    name = StringField('studentname', validators=[DataRequired()])
+    runoob_author = StringField('author', validators=[DataRequired()])
+    bookname = StringField('bookname', validators=[DataRequired()])
+    place = StringField('place', validators=[DataRequired()])
+    submit = SubmitField('add')
 
 class RegistrationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -233,9 +233,9 @@ def register():
     return render_template('register.html',  pageTitle='Register | My Flask App', form=form)
 
 @app.route('/add', methods=['GET', 'POST'])
-def register():
+def add():
     user_name = session.get("user_name")
-	add_form = addForm()
+    add_from =addForm() 
     if form.validate_on_submit():
         #数据库逻辑
         #user = User(name=form.name.data, username=form.username.data, email=form.email.data)
@@ -246,11 +246,10 @@ def register():
         return redirect(url_for('index'))
     return render_template('register.html',  pageTitle='Register | My Flask App', form=form)
 
-@app.route('/udate', methods=['GET', 'POST'])
-def register():
+@app.route('/update', methods=['GET', 'POST'])
+def update():
     user_name = session.get("user_name")
-	add_form = updateForm()
-    
+    add_form = updateForm()
     if form.validate_on_submit():
         #数据库逻辑
         #user = User(name=form.name.data, username=form.username.data, email=form.email.data)
@@ -259,7 +258,7 @@ def register():
        # db.session.commit()
         #flash('Congratulations, you are now a registered user!', 'success')
         return redirect(url_for('index'))
-    return render_template('register.html',  pageTitle='Register | My Flask App', form=form)
+    return render_template('update.html',  pageTitle='Register | My Flask App', form=form)
 
 # user login
 @app.route('/login', methods=['GET', 'POST'])

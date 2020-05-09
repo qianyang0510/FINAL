@@ -25,7 +25,7 @@
         <tr>
             <td>{{ book.student_id}}</td>
             <td>{{ book.student_name}}</td>
-            <td>{{book.book_place}}</td>
+            
           </tr>
         {% endfor %}
       </tbody>
@@ -36,11 +36,22 @@
   <p><a href="https://www.youtube.com/watch?v=zRwy8gtgJ1A">Python Flask From Scratch series</a></p>
   <p><a href="https://blog.tecladocode.com/learn-python-defining-user-access-roles-in-flask/"> Defining User Access Levels in Flask</a></p>
   <p><a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-v-user-logins">Flask Mega-Tutorial</a></p>
-    {% if session.logged_in == NULL %}
+  {% if user_name == "admin" %}
+     <a href="{{ url_for('add') }}" class="btn btn-primary btn-lg">add</a>
+     <a href="{{ url_for('update') }}" class="btn btn-success btn-lg">update</a>
+
+{% else %}
+{{ user_name }}
+{% endif %} 
+  
+  
+  
+  
+  {% if session.logged_in == NULL %}
       <a href="/register" class="btn btn-primary btn-lg">Register</a>
       <a href="/login" class="btn btn-success btn-lg">Login</a>
     {% endif %}
-    
+
   </div>
 
 {% endblock %}
