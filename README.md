@@ -23,7 +23,13 @@ CREATE TABLE IF NOT EXISTS `book_tbl`(
 ```
 
 
-#session 
-##An established session is the basic requirement to perform a connection-oriented communication. A session also is the basic step to transmit in connectionless communication modes. However any unidirectional transmission does not define a session.[1]
+# session 
+## An established session is the basic requirement to perform a connection-oriented communication. A session also is the basic step to transmit in connectionless communication modes. However any unidirectional transmission does not define a session.
+
+# MySQL datebase
+
+## if you want run in local env
+
+[watch the video](https://www.youtube.com/watch?v=DPBspKl2epk&list=PLdS4Kd4flpQxY-xE-wAcwkZ6KFQ0WgC3O&index=5&t=837s)
 
 

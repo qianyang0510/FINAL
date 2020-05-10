@@ -32,7 +32,7 @@
   <p><a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-v-user-logins">Flask Mega-Tutorial</a></p>
   {% if user_name == "admin" %}
      <a href="{{ url_for('add') }}" class="btn btn-primary btn-lg">add</a>
-     <a href="{{ url_for('update') }}" class="btn btn-success btn-lg">update</a>
+     <a href="{{ url_for('update') }}" class="btn btn-success btn-lg">delete</a>
 
 {% else %}
 {{ user_name }}
